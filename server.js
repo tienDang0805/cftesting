@@ -7,8 +7,28 @@ app.use(bodyParser.json());
 
 // Middleware để log thông tin request
 app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-    console.log('Request Body:', JSON.stringify(req.body, null, 2));
+    const logData = {
+        timestamp: new Date().toISOString(),
+        method: req.method,
+        url: req.url,
+        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        headers: req.headers,
+        body: req.body,
+    };
+
+    const logString = `[${logData.timestamp}] ${logData.method} ${logData.url} - IP: ${logData.ip}\nHeaders: ${JSON.stringify(logData.headers, null, 2)}\nBody: ${JSON.stringify(logData.body, null, 2)}\n\n`;
+
+    // In ra console
+    console.log(logString);
+
+    // Ghi vào file log
+    const logFilePath = path.join(__dirname, 'server.log');
+    fs.appendFile(logFilePath, logString, (err) => {
+        if (err) {
+            console.error('Failed to write log:', err);
+        }
+    });
+
     next(); // Tiếp tục xử lý request
 });
 
