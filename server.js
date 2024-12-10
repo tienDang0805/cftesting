@@ -22,12 +22,6 @@ app.use((req, res, next) => {
     console.log(logString);
 
     // Ghi vào file log
-    const logFilePath = path.join(__dirname, 'server.log');
-    fs.appendFile(logFilePath, logString, (err) => {
-        if (err) {
-            console.error('Failed to write log:', err);
-        }
-    });
 
     next(); // Tiếp tục xử lý request
 });
