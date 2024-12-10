@@ -28,11 +28,11 @@ const apiKey = 'DBRW17YE7FHKR72T';
 app.post('/getQrCode', (req, res) => {
     const { username, time, sign, data } = req.body;
 
-    const calculatedSign = generateSignature({ ...data, username, time }, apiKey);
-    if (calculatedSign !== sign) {
-        console.error('Invalid signature:', { calculatedSign, receivedSign: sign });
-        return res.status(400).json({ returnCode: 'SIGN_ERROR', msg: 'Invalid signature' });
-    }
+    // const calculatedSign = generateSignature({ ...data, username, time }, apiKey);
+    // if (calculatedSign !== sign) {
+    //     console.error('Invalid signature:', { calculatedSign, receivedSign: sign });
+    //     return res.status(400).json({ returnCode: 'SIGN_ERROR', msg: 'Invalid signature' });
+    // }
 
     res.json({
         returnCode: 'SUCCESS',
@@ -49,11 +49,11 @@ app.post('/getQrCode', (req, res) => {
 app.post('/payBarCode', (req, res) => {
     const { username, time, sign, data } = req.body;
 
-    const calculatedSign = generateSignature({ ...data, username, time }, apiKey);
-    if (calculatedSign !== sign) {
-        console.error('Invalid signature:', { calculatedSign, receivedSign: sign });
-        return res.status(400).json({ returnCode: 'SIGN_ERROR', msg: 'Invalid signature' });
-    }
+    // const calculatedSign = generateSignature({ ...data, username, time }, apiKey);
+    // if (calculatedSign !== sign) {
+    //     console.error('Invalid signature:', { calculatedSign, receivedSign: sign });
+    //     return res.status(400).json({ returnCode: 'SIGN_ERROR', msg: 'Invalid signature' });
+    // }
 
     const payStatus = 'PAYSUCCESS'; // Could be dynamic
     res.json({
@@ -71,11 +71,11 @@ app.post('/payBarCode', (req, res) => {
 app.post('/callback', (req, res) => {
     const { username, time, sign, data } = req.body;
 
-    const calculatedSign = generateSignature({ ...data, username, time }, apiKey);
-    if (calculatedSign !== sign) {
-        console.error('Invalid signature:', { calculatedSign, receivedSign: sign });
-        return res.status(400).json({ returnCode: 'SIGN_ERROR', msg: 'Invalid signature' });
-    }
+    // const calculatedSign = generateSignature({ ...data, username, time }, apiKey);
+    // if (calculatedSign !== sign) {
+    //     console.error('Invalid signature:', { calculatedSign, receivedSign: sign });
+    //     return res.status(400).json({ returnCode: 'SIGN_ERROR', msg: 'Invalid signature' });
+    // }
 
     res.json({ returnCode: 'SUCCESS', msg: 'Callback received' });
 });
@@ -83,11 +83,11 @@ app.post('/callback', (req, res) => {
 app.post('/refund', (req, res) => {
     const { username, time, sign, data } = req.body;
 
-    const calculatedSign = generateSignature({ ...data, username, time }, apiKey);
-    if (calculatedSign !== sign) {
-        console.error('Invalid signature:', { calculatedSign, receivedSign: sign });
-        return res.status(400).json({ returnCode: 'SIGN_ERROR', msg: 'Invalid signature' });
-    }
+    // const calculatedSign = generateSignature({ ...data, username, time }, apiKey);
+    // if (calculatedSign !== sign) {
+    //     console.error('Invalid signature:', { calculatedSign, receivedSign: sign });
+    //     return res.status(400).json({ returnCode: 'SIGN_ERROR', msg: 'Invalid signature' });
+    // }
 
     res.json({
         returnCode: 'SUCCESS',
