@@ -1,80 +1,91 @@
 const express = require('express');
+const app = express();
 const bodyParser = require('body-parser');
 
-const app = express();
-const port = 3000;
-
-// Middleware để xử lý JSON request body
+// Middleware để parse JSON
 app.use(bodyParser.json());
 
-// Helper functions
-function formatDate() {
-    const now = new Date();
-    return now.toISOString().replace('T', ' ').split('.')[0];
-}
+// API 3.1: Get QR Code Interface
+app.post('/getQrCode', (req, res) => {
+    console.log('Request to /getQrCode:', req.body);
+    const { username, time, sign, data } = req.body;
 
-// Command Handlers
-function handleLogin(req, res) {
-    const request = req.body;
-    const response = {
-        cmd: `${request.cmd}_r`,
-        vmc_no: request.vmc_no,
-        carrier_code: "TW-00418",
-        date_time: formatDate(),
-        server_list: "185.100.67.252",
-        ret: 0,
-    };
-
-    console.log(`Response sent: ${JSON.stringify(response)}`);
-    res.json(response);
-}
-
-function handlePayment(req, res) {
-    const request = req.body;
-    const response = {
-        cmd: `${request.cmd}_r`,
-        vmc_no: request.vmc_no,
-        qr_type: request.qr_type,
-        qrcode: "XXXXXXXXXXXXXX", // Đây là mã QR giả
-        order_no: request.order_no,
-    };
-
-    console.log(`Response sent: ${JSON.stringify(response)}`);
-    res.json(response);
-}
-
-// Error Response
-function sendErrorResponse(res, errorMsg) {
-    const response = { error: errorMsg };
-    console.log(`Error response sent: ${JSON.stringify(response)}`);
-    res.status(400).json(response);
-}
-
-// Xử lý các yêu cầu POST
-app.post('/', (req, res) => {
-    const request = req.body;
-
-    if (!request.cmd) {
-        sendErrorResponse(res, "Invalid request format");
-        return;
+    if (!username || !time || !sign || !data) {
+        return res.status(400).json({ returnCode: 'FAIL', msg: 'Missing required fields' });
     }
 
-    console.log(`Request command: ${request.cmd}`);
-
-    switch (request.cmd) {
-        case "login":
-            handleLogin(req, res);
-            break;
-        case "qrcode":
-            handlePayment(req, res);
-            break;
-        default:
-            console.log("Unknown command received.");
-            sendErrorResponse(res, "Unknown command");
-    }
+    // Fake response
+    res.json({
+        returnCode: 'SUCCESS',
+        msg: 'QR Code generated',
+        time: new Date().toISOString(),
+        data: {
+            deviceNo: data.deviceNo,
+            orderNo: data.orderNo,
+            qrCode: 'http://example.com/qrcode/' + data.orderNo,
+        },
+    });
 });
 
-// Start the HTTP server
-app.listen(port, () => {
-    console.log(`Server running and listening on http://localhost:${port}`);
+// API 3.2: Scanned Payment Interface
+app.post('/payBarCode', (req, res) => {
+    console.log('Request to /payBarCode:', req.body);
+    const { username, time, sign, data } = req.body;
+
+    if (!username || !time || !sign || !data) {
+        return res.status(400).json({ returnCode: 'FAIL', msg: 'Missing required fields' });
+    }
+
+    // Fake response
+    res.json({
+        returnCode: 'SUCCESS',
+        msg: 'Payment processed',
+        time: new Date().toISOString(),
+        data: {
+            deviceNo: data.deviceNo,
+            orderNo: data.orderNo,
+            payStatus: 'PAYSUCCESS',
+        },
+    });
+});
+
+// API 3.3: Payment Callback Interface
+app.post('/paymentCallback', (req, res) => {
+    console.log('Callback to /paymentCallback:', req.body);
+    const { username, time, sign, data } = req.body;
+
+    if (!username || !time || !sign || !data) {
+        return res.status(400).json({ returnCode: 'FAIL', msg: 'Missing required fields' });
+    }
+
+    // Fake response
+    res.json({ returnCode: 'SUCCESS', msg: 'Callback received' });
+});
+
+// API 3.4: Order Refund Interface
+app.post('/refund', (req, res) => {
+    console.log('Request to /refund:', req.body);
+    const { username, time, sign, data } = req.body;
+
+    if (!username || !time || !sign || !data) {
+        return res.status(400).json({ returnCode: 'FAIL', msg: 'Missing required fields' });
+    }
+
+    // Fake response
+    res.json({
+        returnCode: 'SUCCESS',
+        msg: 'Refund processed',
+        time: new Date().toISOString(),
+        data: {
+            deviceNo: data.deviceNo,
+            orderNo: data.orderNo,
+            refundState: 'SUCCESS',
+        },
+    });
+});
+
+// Lắng nghe trên cổng 3000
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
