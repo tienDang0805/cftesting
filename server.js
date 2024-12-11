@@ -5,6 +5,24 @@ const bodyParser = require('body-parser');
 // Middleware để parse JSON
 app.use(bodyParser.json());
 
+// Middleware để log tất cả request
+app.use((req, res, next) => {
+    console.log(`Request received: ${req.method} ${req.url}`);
+    console.log(`Headers: ${JSON.stringify(req.headers)}`);
+
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk;
+    });
+
+    req.on('end', () => {
+        if (body) {
+            console.log(`Body: ${body}`);
+        }
+        next();
+    });
+});
+
 // API 3.1: Get QR Code Interface
 app.post('/getQrCode', (req, res) => {
     console.log('Request to /getQrCode:', req.body);
